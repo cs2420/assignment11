@@ -105,18 +105,30 @@ public class PriorityQueue<AnyType> {
 	 * @param x -- the item to be inserted
 	 */
 	public void add(AnyType x) {
-		// FILL IN
-
-		// if the array is full, double its capacity
-
-		// add the new item to the next available node in the tree, so that
-		// complete tree structure is maintained
-
-		// update size
-
-		// percolate the new item up the levels of the tree until heap order is restored
-		// It is STRONGLY recommended that you write a percolateUp helper method!
-
+		if(currentSize == array.length){
+			AnyType [] temp = (AnyType[]) new Object[array.length*2];
+			for(int i = 0; i<array.length; i++){
+				temp[i] = array[i];
+			}
+			array = temp;
+		}
+		array[currentSize] = x;
+		percolateUp(x, currentSize);
+		currentSize++;
+	}
+	
+	private void percolateUp(AnyType x, int index){
+		int parentIndex = (index - 1) / 2;
+		if(index == 0 || compare(x, array[parentIndex])>0){
+			return;
+		}
+		else{
+			AnyType temp = array[parentIndex];
+			array[parentIndex] = x;
+			array[index] = temp;
+			percolateUp(x, parentIndex);
+		}
+		
 	}
 
 	/**
