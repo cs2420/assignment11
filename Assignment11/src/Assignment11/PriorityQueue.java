@@ -71,7 +71,7 @@ public class PriorityQueue<AnyType> {
 		}
 
 		// Top item should be smallest, so return it.
-		return array[1];
+		return array[0];
 	}
 
 	/**
@@ -89,18 +89,18 @@ public class PriorityQueue<AnyType> {
 		}
 
 		// store the minimum item so that it may be returned at the end
-		AnyType minItem = array[1];
+		AnyType minItem = array[0];
 
 		// replace the item at minIndex with the last item in the tree
-		array[1] = array[currentSize];
-		array[currentSize] = null;
+		array[0] = array[currentSize -1 ];
+		array[currentSize - 1] = null;
 
 		// update size
 		this.currentSize--;
 
 		// percolate the item at minIndex down the tree until heap order is
 		// restored
-		percolateDown(1);
+		percolateDown(0);
 
 		// return the minimum item that was stored
 		return minItem;
@@ -117,13 +117,25 @@ public class PriorityQueue<AnyType> {
 		int rightChild = rightChildIndex(parent);
 		int leftChild = leftChildIndex(parent);
 
+		if(array[leftChild] == null && array[rightChild] == null){
+			return;
+		}
+		if(array[rightChild] == null){
+			if(compare(array[leftChild], parentItem) > 0){
+				return;
+			}
+			else{
+				swap(leftChild, parent);
+				return;
+			}
+		}
 		// If left child < parent item, and left < than right
-		if (compare(array[leftChild], parentItem) < 0 && compare(array[leftChild], array[rightChild]) < 0) {
+		if (compare(array[leftChild], parentItem) <= 0 && compare(array[leftChild], array[rightChild]) < 0) {
 			smallest = leftChild;
 		}
 
 		// If right child < parent item, and right < than left
-		if (compare(array[rightChild], parentItem) < 0 && compare(array[rightChild], array[leftChild]) < 0) {
+		if (compare(array[rightChild], parentItem) <= 0 && compare(array[rightChild], array[leftChild]) < 0) {
 			smallest = rightChild;
 		}
 
@@ -142,6 +154,7 @@ public class PriorityQueue<AnyType> {
 		array[index1] = array[index2];
 		array[index2] = firstItem;
 	}
+	
 
 	/**
 	 * Private helper method. Returns index of left child.
@@ -174,14 +187,14 @@ public class PriorityQueue<AnyType> {
 			}
 			array = temp;
 		}
-		currentSize++;
 		array[currentSize] = item;
 		percolateUp(item, currentSize);
+		currentSize++;
 	}
 
 	private void percolateUp(AnyType item, int index) {
 		int parentIndex = (index - 1) / 2;
-		if (index == 1 || compare(item, array[parentIndex]) > 0) {
+		if (index == 0 || compare(item, array[parentIndex]) >= 0) {
 			return;
 		} else {
 			AnyType temp = array[parentIndex];
