@@ -26,7 +26,6 @@ public class PriorityQueue<AnyType> {
 	 * natural ordering (i.e., AnyType is expected to be Comparable) AnyType is
 	 * not forced to be Comparable.
 	 */
-
 	public PriorityQueue() {
 		currentSize = 0;
 		cmp = null;
@@ -72,7 +71,7 @@ public class PriorityQueue<AnyType> {
 		}
 
 		// Top item should be smallest, so return it.
-		return array[0];
+		return array[1];
 	}
 
 	/**
@@ -85,16 +84,16 @@ public class PriorityQueue<AnyType> {
 	 */
 	public AnyType deleteMin() throws NoSuchElementException {
 		// if the heap is empty, throw a NoSuchElementException
-		if (currentSize < 0) {
+		if (currentSize < 1) {
 			throw new NoSuchElementException();
 		}
 
 		// store the minimum item so that it may be returned at the end
-		AnyType minItem = array[0];
+		AnyType minItem = array[1];
 
 		// replace the item at minIndex with the last item in the tree
-		array[0] = array[currentSize - 1];
-		array[currentSize - 1] = null;
+		array[1] = array[currentSize];
+		array[currentSize] = null;
 
 		// update size
 		this.currentSize--;
@@ -111,21 +110,37 @@ public class PriorityQueue<AnyType> {
 	 * Private helper method that percolates down. Takes the top item of the
 	 * min-heap and percolates it down the tree into its correct spot.
 	 */
-	private void percolateDown(int hole) {
-		int child;
-		AnyType temp = array[hole];
-		for (; hole * 2 <= currentSize; hole = child) {
-			child = hole * 2;
-			if (child != currentSize && compare(array[child + 1], array[child]) < 0) {
-				child++;
-			}
-			if (compare(array[child], temp) < 0) {
-				array[hole] = array[child];
-			} else {
-				break;
-			}
+	private void percolateDown(int parent) {
+
+		AnyType parentItem = array[parent];
+		int smallest = parent;
+		int rightChild = rightChildIndex(parent);
+		int leftChild = leftChildIndex(parent);
+
+		// If left child < parent item, and left < than right
+		if (compare(array[leftChild], parentItem) < 0 && compare(array[leftChild], array[rightChild]) < 0) {
+			smallest = leftChild;
 		}
-		array[hole] = temp;
+
+		// If right child < parent item, and right < than left
+		if (compare(array[rightChild], parentItem) < 0 && compare(array[rightChild], array[leftChild]) < 0) {
+			smallest = rightChild;
+		}
+
+		// If parent isn't the smallest, need to swap and check order again
+		if (smallest != parent) {
+			swap(parent, smallest);
+			percolateDown(smallest);
+		}
+	}
+
+	/**
+	 * Private helper method that swaps two objects within an array.
+	 */
+	private void swap(int index1, int index2) {
+		AnyType firstItem = array[index1];
+		array[index1] = array[index2];
+		array[index2] = firstItem;
 	}
 
 	/**
@@ -147,10 +162,11 @@ public class PriorityQueue<AnyType> {
 	 * 
 	 * (Runs in logarithmic time.) Can sometimes terminate early.
 	 * 
-	 * @param x
+	 * @param item
 	 *            -- the item to be inserted
 	 */
-	public void add(AnyType x) {
+	public void add(AnyType item) {
+		// backing array too small, so double it.
 		if (currentSize == array.length) {
 			AnyType[] temp = (AnyType[]) new Object[array.length * 2];
 			for (int i = 0; i < array.length; i++) {
@@ -158,22 +174,22 @@ public class PriorityQueue<AnyType> {
 			}
 			array = temp;
 		}
-		array[currentSize] = x;
-		percolateUp(x, currentSize);
 		currentSize++;
+		array[currentSize] = item;
+		percolateUp(item, currentSize);
+
 	}
 
-	private void percolateUp(AnyType x, int index) {
+	private void percolateUp(AnyType item, int index) {
 		int parentIndex = (index - 1) / 2;
-		if (index == 0 || compare(x, array[parentIndex]) > 0) {
+		if (index == 1 || compare(item, array[parentIndex]) > 0) {
 			return;
 		} else {
 			AnyType temp = array[parentIndex];
-			array[parentIndex] = x;
+			array[parentIndex] = item;
 			array[index] = temp;
-			percolateUp(x, parentIndex);
+			percolateUp(item, parentIndex);
 		}
-
 	}
 
 	/**
@@ -203,10 +219,8 @@ public class PriorityQueue<AnyType> {
 	 */
 	private int compare(AnyType lhs, AnyType rhs) {
 		if (cmp == null) {
-			return ((Comparable<? super AnyType>) lhs).compareTo(rhs); // safe
-																		// to
-																		// ignore
-																		// warning
+			// safe to ignore warning
+			return ((Comparable<? super AnyType>) lhs).compareTo(rhs);
 		}
 		// We won't test your code on non-Comparable types if we didn't supply a
 		// Comparator
