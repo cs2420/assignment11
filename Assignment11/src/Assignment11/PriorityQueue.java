@@ -177,7 +177,6 @@ public class PriorityQueue<AnyType> {
 		currentSize++;
 		array[currentSize] = item;
 		percolateUp(item, currentSize);
-
 	}
 
 	private void percolateUp(AnyType item, int index) {
