@@ -92,7 +92,7 @@ public class PriorityQueue<AnyType> {
 		AnyType minItem = array[0];
 
 		// replace the item at minIndex with the last item in the tree
-		array[0] = array[currentSize -1 ];
+		array[0] = array[currentSize - 1];
 		array[currentSize - 1] = null;
 
 		// update size
@@ -116,26 +116,30 @@ public class PriorityQueue<AnyType> {
 		int smallest = parent;
 		int rightChild = rightChildIndex(parent);
 		int leftChild = leftChildIndex(parent);
-
-		if(array[leftChild] == null && array[rightChild] == null){
-			return;
-		}
-		if(array[rightChild] == null){
-			if(compare(array[leftChild], parentItem) > 0){
+		try {
+			if (array[leftChild] == null && array[rightChild] == null) {
 				return;
 			}
-			else{
+		} catch (IndexOutOfBoundsException e) {
+			return;
+		}
+		if (array[rightChild] == null) {
+			if (compare(array[leftChild], parentItem) > 0) {
+				return;
+			} else {
 				swap(leftChild, parent);
 				return;
 			}
 		}
 		// If left child < parent item, and left < than right
-		if (compare(array[leftChild], parentItem) <= 0 && compare(array[leftChild], array[rightChild]) < 0) {
+		if (compare(array[leftChild], parentItem) <= 0
+				&& compare(array[leftChild], array[rightChild]) < 0) {
 			smallest = leftChild;
 		}
 
 		// If right child < parent item, and right < than left
-		if (compare(array[rightChild], parentItem) <= 0 && compare(array[rightChild], array[leftChild]) < 0) {
+		if (compare(array[rightChild], parentItem) <= 0
+				&& compare(array[rightChild], array[leftChild]) < 0) {
 			smallest = rightChild;
 		}
 
@@ -154,7 +158,6 @@ public class PriorityQueue<AnyType> {
 		array[index1] = array[index2];
 		array[index2] = firstItem;
 	}
-	
 
 	/**
 	 * Private helper method. Returns index of left child.
@@ -212,11 +215,14 @@ public class PriorityQueue<AnyType> {
 			out.println("digraph Heap {\n\tnode [shape=record]\n");
 
 			for (int i = 0; i < currentSize; i++) {
-				out.println("\tnode" + i + " [label = \"<f0> |<f1> " + array[i] + "|<f2> \"]");
+				out.println("\tnode" + i + " [label = \"<f0> |<f1> " + array[i]
+						+ "|<f2> \"]");
 				if (((i * 2) + 1) < currentSize)
-					out.println("\tnode" + i + ":f0 -> node" + ((i * 2) + 1) + ":f1");
+					out.println("\tnode" + i + ":f0 -> node" + ((i * 2) + 1)
+							+ ":f1");
 				if (((i * 2) + 2) < currentSize)
-					out.println("\tnode" + i + ":f2 -> node" + ((i * 2) + 2) + ":f1");
+					out.println("\tnode" + i + ":f2 -> node" + ((i * 2) + 2)
+							+ ":f1");
 			}
 			out.println("}");
 		} catch (IOException e) {

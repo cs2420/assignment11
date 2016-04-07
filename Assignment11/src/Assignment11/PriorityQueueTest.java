@@ -19,8 +19,21 @@ public class PriorityQueueTest {
 		Object[] arr = test.toArray();
 		assertEquals(6, arr.length);
 		test.generateDotFile("test");
-		assertEquals(true, testAdd(arr));
+		assertEquals(true, testOrder(arr));
 		
+	}
+	
+	@Test
+	public void addFull(){
+		PriorityQueue<Integer> test = new PriorityQueue<Integer>();
+		for(int i = 0; i<10; i++){
+			test.add(i);
+		}
+		test.add(50);
+		assertTrue(testOrder(test.toArray()));
+		test.add(-3);
+		assertTrue(testOrder(test.toArray()));
+		test.generateDotFile("add");
 	}
 	
 	@Test
@@ -43,11 +56,11 @@ public class PriorityQueueTest {
 		assertEquals((Integer)(-5), (Integer)test.findMin());
 		assertEquals((Integer)(-5), test.deleteMin());
 		assertEquals(3, test.size());
-		assertTrue(testAdd(test.toArray()));
+		assertTrue(testOrder(test.toArray()));
 		test.generateDotFile("test2");
 	}
 	
-	private boolean testAdd(Object [] a){
+	private boolean testOrder(Object [] a){
 		for(int i = 0; i<a.length; i++){
 			int left = (i * 2) + 1;
 			int right = (i * 2) + 2;
