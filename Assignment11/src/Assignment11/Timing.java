@@ -2,7 +2,6 @@ package Assignment11;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -46,7 +45,7 @@ public class Timing {
 			}
 
 			for (int iter = 0; iter < ITER_COUNT; iter++) {
-				Integer toAdd = rand.nextInt(queue.size());
+			//	Integer toAdd = rand.nextInt(queue.size());
 				// START TIMER
 				long start = System.nanoTime();
 
